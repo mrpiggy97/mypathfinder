@@ -1,3 +1,19 @@
+div#canvas{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 10fr;
+    grid-template-areas: "menu"
+                         "path-finder"
+                         "path-finder";
+    border: green solid 5px;
+}
+
+div#menu{
+    display: grid;
+    grid-area: "menu";
+    border: purple solid 5px
+}
+
 div#path-finder{
     display: grid;
     grid-area: "path-finder";
@@ -5,4 +21,5 @@ div#path-finder{
     grid-template-columns: repeat(47,1fr);
     grid-auto-rows: min-content;
     align-items: flex-start;
+    border: black solid 5px;
 }

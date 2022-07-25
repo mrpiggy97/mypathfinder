@@ -22,13 +22,18 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
     },[props.CanvasSize])
 
     return(
-        <div id="path-finder">
-            {nodes.map((node) => {
-                return <PathNode
-                key={node}
-                IsBeginning={node === 0 ? true : false}
-                IsEnd={node === (props.CanvasSize-1) ? true : false}/>
-            })}
+        <div id="canvas">
+            <div id="menu">
+                menu
+            </div>
+            <div id="path-finder">
+                {nodes.map((node) => {
+                    return <PathNode
+                    key={node}
+                    IsBeginning={node === 0 ? true : false}
+                    IsEnd={node === (props.CanvasSize-1) ? true : false}/>
+                })}
+            </div>
         </div>
     )
 }

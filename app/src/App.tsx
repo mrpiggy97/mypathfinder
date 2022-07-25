@@ -11,10 +11,7 @@ function App() {
   // canvas
   return (
     <div id="App">
-      <div id="header">
-        header
-      </div>
-      <PathFinder CanvasSize={846} />
+      <PathFinder CanvasSize={893} />
     </div>
   );
 }
