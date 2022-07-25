@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import "./css/PathNode.css"
 
 type PathNodeProps = {
@@ -7,22 +7,27 @@ type PathNodeProps = {
 }
 
 export default function PathNode(props : PathNodeProps) : JSX.Element{
-    let cssClass : string = ""
+    let [status,setStatus] = useState("")
 
-    switch(props.IsBeginning){
-        case true:
-            cssClass = "path-node-is-beggining path-node-basic"
-        break
-        case false:
-            if(props.IsEnd === true){
-                cssClass = "path-node-is-end path-node-basic"
-            }
-        break
-        default:
-            cssClass = "path-node path-node-basic"
+    const defineStatus = () => {
+        switch(props.IsBeginning){
+            case props.IsBeginning === true:
+                setStatus("path-node path-node-is-beginning")
+            break
+            case props.IsBeginning === false:
+                if(props.IsEnd === true){
+                    setStatus("path-node path-node-is-end")
+                }
+            break
+            default:
+                setStatus("path-node path-node-basic")
+        }
     }
+
+    useEffect(defineStatus,[props.IsBeginning,props.IsEnd])
+
     return(
-        <div className="path-node path-node-basic">
+        <div className={status}>
         </div>
     )
 }
