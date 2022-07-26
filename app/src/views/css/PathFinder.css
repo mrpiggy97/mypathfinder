@@ -18,7 +18,8 @@ div#path-finder{
     display: grid;
     grid-area: "path-finder";
     row-gap: 1px;
-    grid-template-columns: repeat(47,1fr);
+    grid-template-columns: repeat(30,1fr);
+    grid-template-rows: repeat(30,1fr);
     grid-auto-rows: min-content;
     align-items: flex-start;
     border: black solid 5px;

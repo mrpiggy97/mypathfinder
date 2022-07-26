@@ -1,15 +1,33 @@
 import React,{useMemo} from "react";
-import PathNode from "../components/PathNode";
+import RowNode,{Row} from "../components/Row";
 
 import "./css/PathFinder.css"
 
-// returns an array containing all the nodes to be rendered
-function getNodesForCanvas(canvasSize : number) : number[]{
-    let nodesInCanvas : number[] = []
-    for(let i = 0; i < canvasSize; i++){
-        nodesInCanvas.push(i)
+function getRowsForCanvas(canvasSize : number) : Row[]{
+    let numberOfRows : number = Math.sqrt(canvasSize)
+    let numberOfMembersPerRow : number = Math.sqrt(canvasSize)
+    let rows : Row[] = []
+    let currentRow : Row = new Row(0,null,null,0)
+    for(let i = 0; i < numberOfRows; i++){
+        // if row is beginning then previousRow and nextRow
+        // will be null and then will set currentRow as this
+        // newly created Row
+        if(i === 0){
+            let newNode = new Row(i,null,null,numberOfMembersPerRow)
+            currentRow = newNode
+            rows.push(newNode)
+        }else{
+            // every Row after the beginning row will have previousRow
+            // the currentRow value(which will be updated with every new Row)
+            // and nextRow as null as it does not yet exist
+            let newRow = new Row(i,currentRow,null,numberOfMembersPerRow)
+            currentRow.NextRow = newRow
+            currentRow = newRow
+            rows.push(newRow)            
+        }
     }
-    return nodesInCanvas
+
+    return rows
 }
 
 type PathFinderProps = {
@@ -17,21 +35,18 @@ type PathFinderProps = {
 }
 
 export default function PathFinder(props : PathFinderProps) : JSX.Element{
-    let nodes = useMemo(() => {
-        return getNodesForCanvas(props.CanvasSize)
+    let rows = useMemo(() => {
+        return getRowsForCanvas(props.CanvasSize)
     },[props.CanvasSize])
 
     return(
         <div id="canvas">
             <div id="menu">
-                menu
+                menu {rows.length}
             </div>
             <div id="path-finder">
-                {nodes.map((node) => {
-                    return <PathNode
-                    key={node}
-                    IsBeginning={node === 0 ? true : false}
-                    IsEnd={node === (props.CanvasSize-1) ? true : false}/>
+                {rows.map((row) => {
+                    return <RowNode row={row} />
                 })}
             </div>
         </div>
