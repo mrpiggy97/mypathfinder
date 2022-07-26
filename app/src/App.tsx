@@ -7,11 +7,10 @@ function App() {
   // canvasSize will set the number of Nodes
   // to render
 
-  // 846 is a random value that happens to fill
-  // canvas
+  // 900 because canvas is 30*30
   return (
     <div id="App">
-      <PathFinder CanvasSize={893} />
+      <PathFinder CanvasSize={900} />
     </div>
   );
 }
