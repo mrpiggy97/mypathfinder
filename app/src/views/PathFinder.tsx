@@ -1,5 +1,5 @@
 import React,{useMemo} from "react";
-import RowNode,{Row} from "../components/Row";
+import RowComponent,{Row} from "../components/Row";
 
 import "./css/PathFinder.css"
 
@@ -13,9 +13,9 @@ function getRowsForCanvas(canvasSize : number) : Row[]{
         // will be null and then will set currentRow as this
         // newly created Row
         if(i === 0){
-            let newNode = new Row(i,null,null,numberOfMembersPerRow)
-            currentRow = newNode
-            rows.push(newNode)
+            let newRow = new Row(i,null,null,numberOfMembersPerRow)
+            currentRow = newRow
+            rows.push(newRow)
         }else{
             // every Row after the beginning row will have previousRow
             // the currentRow value(which will be updated with every new Row)
@@ -46,7 +46,7 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
             </div>
             <div id="path-finder">
                 {rows.map((row) => {
-                    return <RowNode row={row} />
+                    return <RowComponent row={row} key={row.Id} />
                 })}
             </div>
         </div>
