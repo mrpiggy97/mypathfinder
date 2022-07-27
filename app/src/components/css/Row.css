@@ -1,16 +1,16 @@
-div.path-node{
+div.row-node{
     background-color: transparent;
 }
 
-div.path-node-is-beginning{
+div.row-node-is-beginning{
     background-color: blue;
 }
 
-div.path-node-is-end{
+div.row-node-is-end{
     background-color: red;
 }
 
-div.path-node-basic{
+div.row-node-basic{
     display: grid;
     min-height: 25px;
     max-height: 25px;
