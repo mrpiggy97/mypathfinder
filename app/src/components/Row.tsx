@@ -1,4 +1,4 @@
-import React,{useState,useEffect, useMemo} from "react";
+import React,{useState,useEffect, useMemo, MouseEventHandler} from "react";
 import "./css/Row.css"
 
 
@@ -8,12 +8,18 @@ class RowNode{
     row : Row
     kuuid : string
     id : number
+    isVisited : boolean
+    isBeginning : boolean
+    isEnd : boolean
     constructor(id : number,previousRowNode : RowNode | null, nextRowNode : RowNode | null, row : Row){
         this.previousRowNode = previousRowNode
         this.nextRowNode = nextRowNode
         this.row = row
         this.kuuid = `${row.Id} ${id} row-node`
         this.id = id
+        this.isVisited = false
+        this.isBeginning = false
+        this.isEnd = false
     }
 }
 
@@ -24,9 +30,10 @@ type RowNodeComponentProps = {
     rowNode : RowNode
 }
 
-function RowNodeComponent(props : RowNodeComponentProps) : JSX.Element{
+export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.Element{
     let [status,setStatus] = useState("")
 
+    // effects
     const defineStatus = () => {
         if(props.isBeginning && !props.isEnd){
             setStatus(`row-node-basic row-node-is-beginning`)
@@ -79,24 +86,4 @@ class Row{
     }
 }
 
-type RowComponentProps = {
-    row : Row
-}
-
-export default function RowComponent(props : RowComponentProps):JSX.Element{
-    return(
-        <React.Fragment>
-            {props.row.Nodes.map((node) => {
-                return <RowNodeComponent
-                isBeginning={false}
-                isEnd={false}
-                isVisited={false}
-                rowNode={node}
-                key={node.kuuid}
-                />
-            })}
-        </React.Fragment>
-    )
-}
-
-export {Row}
+export {Row,RowNode}
