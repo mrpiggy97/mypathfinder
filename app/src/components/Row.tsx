@@ -1,5 +1,6 @@
 import React,{useState,useEffect, useMemo, MouseEventHandler} from "react";
 import "./css/Row.css"
+import {getBeginnerNode,setAsBeginnerNode,unsetBeginnerNode} from "../repository/selectedRowNode"
 
 
 class RowNode{
@@ -32,6 +33,7 @@ type RowNodeComponentProps = {
 
 export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.Element{
     let [status,setStatus] = useState("")
+    let selectedBeginnerNode : RowNode | null = getBeginnerNode()
 
     // effects
     const defineStatus = () => {
