@@ -1,6 +1,5 @@
-import React,{useState,useEffect, useMemo, MouseEventHandler} from "react";
+import React,{useState,useEffect} from "react";
 import "./css/Row.css"
-import {getBeginnerNode,setAsBeginnerNode,unsetBeginnerNode} from "../repository/selectedRowNode"
 
 
 class RowNode{
@@ -25,15 +24,18 @@ class RowNode{
 }
 
 type RowNodeComponentProps = {
+    beginnerNode : RowNode | null
+    endNode : RowNode | null
+    isVisited : boolean
     isBeginning : boolean
     isEnd : boolean
-    isVisited : boolean
-    rowNode : RowNode
+    setEndNode : (index : number) => void
+    setBeginningNode : (index : number) => void
+    index : number
 }
 
 export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.Element{
     let [status,setStatus] = useState("")
-    let selectedBeginnerNode : RowNode | null = getBeginnerNode()
 
     // effects
     const defineStatus = () => {
@@ -48,28 +50,41 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
         }
     }
 
+    const defineAction = () : void => {
+        console.log("action called")
+        if(!props.beginnerNode){
+            props.setBeginningNode(props.index)
+        }
+        if(!props.endNode && props.beginnerNode){
+            props.setEndNode(props.index)
+        }
+    }
+
     useEffect(defineStatus,[props.isBeginning,props.isEnd])
 
     return(
-        <div className={status}>
+        <div className={status} onClick={defineAction}>
         </div>
     )
 }
 
 
-function getNodesForRow(numberOfNodes : number, row : Row) : RowNode[]{
+function getNodesForRow(numberOfNodes : number, row : Row,currentRowNodeId : number) : RowNode[]{
     let nodesForRow : RowNode[] = []
     let currentRowNode : RowNode = new RowNode(0,null,null,row)
     for(let i=0; i < numberOfNodes; i++){
         if(i === 0){
-            let newRowNode = new RowNode(i,null,null,row)
+            let newRowNode = new RowNode(currentRowNodeId,null,null,row)
             nodesForRow.push(newRowNode)
             currentRowNode = newRowNode
+            currentRowNodeId = currentRowNodeId + 1
+            console.log(currentRowNodeId)
         }else{
-            let newRowNode = new RowNode(i,currentRowNode,null,row)
+            let newRowNode = new RowNode(currentRowNodeId,currentRowNode,null,row)
             currentRowNode.nextRowNode = newRowNode
             currentRowNode = newRowNode
             nodesForRow.push(newRowNode)
+            currentRowNodeId = currentRowNodeId + 1
         }
     }
     return nodesForRow
@@ -80,11 +95,11 @@ class Row{
     PreviousRow : Row | null
     NextRow : Row | null
     Nodes : RowNode[]
-    constructor(id : number, previousRow : Row | null, nextRow : Row | null, numberOfNodes : number){
+    constructor(id : number, previousRow : Row | null, nextRow : Row | null, numberOfNodes : number,currentNodeRowId : number){
         this.Id = id
         this.PreviousRow = previousRow
         this.NextRow = nextRow
-        this.Nodes = getNodesForRow(numberOfNodes,this)
+        this.Nodes = getNodesForRow(numberOfNodes,this,currentNodeRowId)
     }
 }
 
