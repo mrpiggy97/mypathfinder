@@ -1,4 +1,4 @@
-import { Row, RowNode } from "../components/Row";
+import { RowNode } from "../components/Row";
 
 type NodeGraph = {
     [key : number] : (RowNode | null)[]
@@ -8,11 +8,13 @@ export default class RowNodeGraph{
     nodes : NodeGraph
     NumberOfNodes : number
     nodesToVisit : RowNode[]
+    nodesVisited : RowNode[]
     endNodeFound : boolean
     constructor(begginnerNode : RowNode){
         this.NumberOfNodes = 0
         this.nodes = {}
         this.nodesToVisit = [begginnerNode]
+        this.nodesVisited = []
         this.endNodeFound = false
     }
 
@@ -27,16 +29,15 @@ export default class RowNodeGraph{
         let upperRowNode : RowNode | null = null
         let bottomRowNode : RowNode | null = null
         // all rows have the same number of nodes
-        let lengthOfNodes : number = rowNode.row.Nodes.length
         if(rowNode.row.PreviousRow){
             // in the path finder upperRowNode will be visualized on top
             // of rowNode, but logically it is on previousRow
-            upperRowNode = rowNode.row.PreviousRow.Nodes[rowNode.id-lengthOfNodes]
+            upperRowNode = rowNode.row.PreviousRow.Nodes[rowNode.index]
         }
         if(rowNode.row.NextRow){
             // in the path finder bottomRowNode will be visualized bellow
             // of rowNode but logically it is in nextRow
-            bottomRowNode = rowNode.row.NextRow.Nodes[rowNode.id+lengthOfNodes]
+            bottomRowNode = rowNode.row.NextRow.Nodes[rowNode.index]
         }
         this.nodes[rowNode.id][0] = upperRowNode
         this.nodes[rowNode.id][1] = rowNode.previousRowNode
@@ -47,7 +48,6 @@ export default class RowNodeGraph{
     public Dijkstra(nodes : RowNode[]) : RowNode[]{
         // make a copy of nodes so any changes on the go
         // do not reflect on the nodes
-        let nodesCopy : RowNode[] = structuredClone(nodes)
         // for every node in this.nodesToVisit we create a new edge
         // in the graph and at the same time we check if it has been
         // visited, if it hasn't then we change the value isVisited
@@ -57,24 +57,30 @@ export default class RowNodeGraph{
         // as this.nodesToVisit and if we found a node that is endNode
         // we set endNodeFound to true
         let newNodesToVisit : RowNode[] = []
+        let nodesClone : RowNode[] = structuredClone(nodes)
         this.nodesToVisit.map((node) => {
-            if(!node.isBeginning && !node.isVisited && !node.isEnd){
-                nodesCopy[node.id].isVisited = true
+            if(!node.isVisited && !node.isBeginning && !node.isEnd){
+                nodesClone[node.id].isVisited = true
             }
             if(node.isEnd){
                 this.endNodeFound = true
-                return nodesCopy
+                return nodes
             }
-            this.addNode(node)
-            this.addEdge(node)
+            if(!this.nodesVisited.includes(node)){
+                this.addNode(node)
+                this.addEdge(node)
+                this.nodesVisited.push(node)
+            }
             let currentGraphNode : (RowNode|null)[] = this.nodes[node.id]
-            currentGraphNode.map((node) => {
-                if(node){
-                    newNodesToVisit.push(node)
+            currentGraphNode.map((gnode) => {
+                if(gnode){
+                    if(!this.nodesVisited.includes(gnode)){
+                        newNodesToVisit.push(gnode)
+                    }
                 }
             })
         })
         this.nodesToVisit = newNodesToVisit
-        return nodesCopy
+        return nodesClone
     }
 }

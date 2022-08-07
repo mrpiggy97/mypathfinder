@@ -1,6 +1,7 @@
 import React,{useMemo, useState} from "react";
 import {Row,RowNode} from "../components/Row";
 import RowNodeComponent from "../components/Row"
+import RowNodeGraph from "../graphs/RowNodeGraph";
 
 import "./css/PathFinder.css"
 
@@ -52,8 +53,21 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
     let [selectedBeginnerNode,setSelectedBeginnerNode] = useState(null)
     let [selectedEndNode,setSelectedEndNode] = useState(null)
 
+    const startPathFinder = () => {
+        if(selectedBeginnerNode){
+            let newGraph : RowNodeGraph = new RowNodeGraph(selectedBeginnerNode)
+            while(!newGraph.endNodeFound){
+                let newNodes : RowNode[] = newGraph.Dijkstra(nodes)
+                setTimeout(() => {
+                    setRowNodes(newNodes)
+                }, 100);
+            }
+        }else{
+            alert("no node has been selected as beginnerNode")
+        }
+    }
+
     const setBeginnerNode = (index : number) => {
-        console.log("setBeginnerNode called")
         if(rowNodes[index].isBeginning === true){
             alert("node is already set as beginning rowNode")
         }
@@ -64,10 +78,6 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
             setSelectedBeginnerNode(structuredClone(newRowNodes[index]))
             setRowNodes(newRowNodes)
         }
-    }
-
-    const setStartNode = () => {
-     rowNodes[0].isBeginning = true   
     }
 
     const setEndNode = (index : number) => {
@@ -84,8 +94,8 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
 
     return(
         <div id="canvas">
-            <div id="menu" onClick={setStartNode}>
-                menu
+            <div id="menu" onClick={startPathFinder}>
+                start path finder
             </div>
             <div id="path-finder">
                 {rowNodes.map((node) => {
