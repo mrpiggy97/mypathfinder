@@ -11,7 +11,8 @@ class RowNode{
     isVisited : boolean
     isBeginning : boolean
     isEnd : boolean
-    constructor(id : number,previousRowNode : RowNode | null, nextRowNode : RowNode | null, row : Row){
+    index : number
+    constructor(id : number,previousRowNode : RowNode | null, nextRowNode : RowNode | null, row : Row,index : number){
         this.previousRowNode = previousRowNode
         this.nextRowNode = nextRowNode
         this.row = row
@@ -20,6 +21,7 @@ class RowNode{
         this.isVisited = false
         this.isBeginning = false
         this.isEnd = false
+        this.index = index
     }
 }
 
@@ -48,10 +50,12 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
         if(!props.isBeginning && !props.isEnd){
             setStatus(`row-node-basic row-node`)
         }
+        if(!props.isBeginning && !props.isEnd && props.isVisited){
+            setStatus("row-node-basic row-node-is-visited")
+        }
     }
 
     const defineAction = () : void => {
-        console.log("action called")
         if(!props.beginnerNode){
             props.setBeginningNode(props.index)
         }
@@ -60,10 +64,15 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
         }
     }
 
-    useEffect(defineStatus,[props.isBeginning,props.isEnd])
+    useEffect(defineStatus,[props.isBeginning,props.isEnd,props.isVisited])
+
+    const logIsVisited = () => {
+        console.log(props.isVisited)
+    }
 
     return(
         <div className={status} onClick={defineAction}>
+            <span onClick={logIsVisited}>{props.index}</span>
         </div>
     )
 }
@@ -71,16 +80,15 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
 
 function getNodesForRow(numberOfNodes : number, row : Row,currentRowNodeId : number) : RowNode[]{
     let nodesForRow : RowNode[] = []
-    let currentRowNode : RowNode = new RowNode(0,null,null,row)
+    let currentRowNode : RowNode = new RowNode(0,null,null,row,0)
     for(let i=0; i < numberOfNodes; i++){
         if(i === 0){
-            let newRowNode = new RowNode(currentRowNodeId,null,null,row)
+            let newRowNode = new RowNode(currentRowNodeId,null,null,row,i)
             nodesForRow.push(newRowNode)
             currentRowNode = newRowNode
             currentRowNodeId = currentRowNodeId + 1
-            console.log(currentRowNodeId)
         }else{
-            let newRowNode = new RowNode(currentRowNodeId,currentRowNode,null,row)
+            let newRowNode = new RowNode(currentRowNodeId,currentRowNode,null,row,i)
             currentRowNode.nextRowNode = newRowNode
             currentRowNode = newRowNode
             nodesForRow.push(newRowNode)

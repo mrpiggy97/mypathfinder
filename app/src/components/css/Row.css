@@ -10,6 +10,10 @@ div.row-node-is-end{
     background-color: red;
 }
 
+div.row-node-is-visited{
+    background-color: grey;
+}
+
 div.row-node-basic{
     display: grid;
     min-height: 25px;
