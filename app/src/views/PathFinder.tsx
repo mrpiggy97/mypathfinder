@@ -50,20 +50,16 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
 
     let [rowNodes,setRowNodes] = useState(nodes)
 
-    let [selectedBeginnerNode,setSelectedBeginnerNode] = useState(null)
-    let [selectedEndNode,setSelectedEndNode] = useState(null)
+    let [selectedBeginnerNode,setSelectedBeginnerNode] = useState<RowNode|null>(null)
+    let [selectedEndNode,setSelectedEndNode] = useState<RowNode|null>(null)
 
     const startPathFinder = () => {
-        if(selectedBeginnerNode){
-            let newGraph : RowNodeGraph = new RowNodeGraph(selectedBeginnerNode)
-            while(!newGraph.endNodeFound){
-                let newNodes : RowNode[] = newGraph.Dijkstra(nodes)
-                setTimeout(() => {
-                    setRowNodes(newNodes)
-                }, 100);
-            }
+        if(selectedBeginnerNode && selectedEndNode){
+            let newGraph : RowNodeGraph = new RowNodeGraph(selectedBeginnerNode,selectedEndNode)
+            let newNodes = newGraph.Dijkstra(nodes)
+            setRowNodes(newNodes)
         }else{
-            alert("no node has been selected as beginnerNode")
+            alert("you need to select both beginning and end nodes")
         }
     }
 
@@ -73,10 +69,9 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
         }
 
         if(selectedBeginnerNode === null){
-            let newRowNodes : RowNode[] = structuredClone(rowNodes)
-            newRowNodes[index].isBeginning = true
-            setSelectedBeginnerNode(structuredClone(newRowNodes[index]))
-            setRowNodes(newRowNodes)
+            nodes[index].isBeginning = true
+            setSelectedBeginnerNode(nodes[index])
+            setRowNodes(nodes)
         }
     }
 
@@ -85,10 +80,9 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
             alert("node is already set as end rowNode")
         }
         if(selectedEndNode === null && selectedBeginnerNode){
-            let newRowNodes : RowNode[] = structuredClone(rowNodes)
-            newRowNodes[index].isEnd = true
-            setSelectedEndNode(structuredClone(newRowNodes[index]))        
-            setRowNodes(newRowNodes)    
+            nodes[index].isEnd = true
+            setSelectedEndNode(nodes[index])        
+            setRowNodes(nodes)    
         }
     }
 
