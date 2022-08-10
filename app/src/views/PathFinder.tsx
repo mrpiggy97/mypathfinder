@@ -55,8 +55,8 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
 
     const startPathFinder = () => {
         if(selectedBeginnerNode && selectedEndNode){
-            let newGraph : RowNodeGraph = new RowNodeGraph(selectedBeginnerNode,selectedEndNode)
-            let newNodes = newGraph.Dijkstra(nodes)
+            let newGraph : RowNodeGraph = new RowNodeGraph()
+            let newNodes = newGraph.Dijkstra(rowNodes,selectedBeginnerNode.id,selectedEndNode.id)
             setRowNodes(newNodes)
         }else{
             alert("you need to select both beginning and end nodes")
@@ -64,32 +64,41 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
     }
 
     const setBeginnerNode = (index : number) => {
-        if(rowNodes[index].isBeginning === true){
+        let clone : RowNode[] = structuredClone(rowNodes)
+        if(clone[index].isBeginning === true){
             alert("node is already set as beginning rowNode")
         }
 
         if(selectedBeginnerNode === null){
-            nodes[index].isBeginning = true
-            setSelectedBeginnerNode(nodes[index])
-            setRowNodes(nodes)
+            clone[index].isBeginning = true
+            setSelectedBeginnerNode(clone[index])
+            setRowNodes(clone)
         }
     }
 
     const setEndNode = (index : number) => {
-        if(rowNodes[index].isEnd === true){
+        let clone : RowNode[] = structuredClone(rowNodes)
+        if(clone[index].isEnd === true){
             alert("node is already set as end rowNode")
         }
         if(selectedEndNode === null && selectedBeginnerNode){
-            nodes[index].isEnd = true
-            setSelectedEndNode(nodes[index])        
-            setRowNodes(nodes)    
+            clone[index].isEnd = true
+            setSelectedEndNode(clone[index])        
+            setRowNodes(clone)
         }
+    }
+
+    const setDefaultNodes = () => {
+        setRowNodes(getNodesFromRows(props.CanvasSize))
+        setSelectedBeginnerNode(null)
+        setSelectedEndNode(null)
     }
 
     return(
         <div id="canvas">
-            <div id="menu" onClick={startPathFinder}>
-                start path finder
+            <div id="menu">
+                <span onClick={startPathFinder}>start pathfinder</span>
+                <span onClick={setDefaultNodes}>set empty nodes</span>
             </div>
             <div id="path-finder">
                 {rowNodes.map((node) => {
@@ -103,6 +112,7 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
                     setBeginningNode={setBeginnerNode}
                     setEndNode={setEndNode}
                     index={node.id}
+                    timeout={node.timeout}
                     />
                 })}
             </div>
