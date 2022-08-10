@@ -1,6 +1,4 @@
-import { allowedNodeEnvironmentFlags } from "process";
-import { isGeneratorFunction } from "util/types";
-import { Row, RowNode } from "../components/Row";
+import { RowNode } from "../components/Row";
 
 type NodeGraph = {
     [key : number] : (RowNode | null)[]
@@ -9,15 +7,9 @@ type NodeGraph = {
 export default class RowNodeGraph{
     nodes : NodeGraph
     NumberOfNodes : number
-    endNodeFound : boolean
-    beginnerNode : RowNode
-    endNode : RowNode
-    constructor(begginningNode :  RowNode,endingNode : RowNode){
+    constructor(){
         this.NumberOfNodes = 0
         this.nodes = {}
-        this.beginnerNode = begginningNode
-        this.endNodeFound = false
-        this.endNode = endingNode
     }
 
     public addNode(rowNode : RowNode){
@@ -52,13 +44,16 @@ export default class RowNodeGraph{
         this.addEdge(rowNode)
     }
 
-    public Dijkstra(nodes : RowNode[]){
+    public Dijkstra(nodes : RowNode[],beginnerNodeId : number,endNodeId : number){
         let clone : RowNode[] = structuredClone(nodes)
-        let nodesToVisit : RowNode[] = [this.beginnerNode]
+        let beginningNode : RowNode = clone[beginnerNodeId]
+        let endNode : RowNode = clone[endNodeId]
+        let nodesToVisit : RowNode[] = [beginningNode]
         let visitedNodes : number[] = []
+        let startingTimeout : number = 10
         for(let i=0; i < nodesToVisit.length; i++){
             let currentNode : RowNode = nodesToVisit[i]
-            if(currentNode.isEnd){
+            if(currentNode.id === endNode.id){
                 break
             }
             if(!this.nodes[currentNode.id]){
@@ -67,6 +62,8 @@ export default class RowNodeGraph{
                 visitedNodes.push(currentNode.id)
                 if(!currentNode.isBeginning){
                     clone[currentNode.id].isVisited = true
+                    clone[currentNode.id].timeout = startingTimeout
+                    startingTimeout = startingTimeout + 50
                 }
                 let newNodesToVisit : (RowNode|null)[] = this.nodes[currentNode.id]
                 for(let y = 0; y < newNodesToVisit.length; y++){
