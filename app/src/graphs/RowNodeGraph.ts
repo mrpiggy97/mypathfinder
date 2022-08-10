@@ -39,11 +39,6 @@ export default class RowNodeGraph{
         this.nodes[rowNode.id][3] = rowNode.nextRowNode
     }
 
-    public getNodesToVisit(rowNode : RowNode){
-        this.addNode(rowNode)
-        this.addEdge(rowNode)
-    }
-
     public Dijkstra(nodes : RowNode[],beginnerNodeId : number,endNodeId : number){
         let clone : RowNode[] = structuredClone(nodes)
         let beginningNode : RowNode = clone[beginnerNodeId]
