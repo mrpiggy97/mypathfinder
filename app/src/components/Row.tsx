@@ -12,6 +12,7 @@ class RowNode{
     isBeginning : boolean
     isEnd : boolean
     index : number
+    timeout : number
     constructor(id : number,previousRowNode : RowNode | null, nextRowNode : RowNode | null, row : Row,index : number){
         this.previousRowNode = previousRowNode
         this.nextRowNode = nextRowNode
@@ -22,6 +23,7 @@ class RowNode{
         this.isBeginning = false
         this.isEnd = false
         this.index = index
+        this.timeout = 0
     }
 }
 
@@ -34,6 +36,7 @@ type RowNodeComponentProps = {
     setEndNode : (index : number) => void
     setBeginningNode : (index : number) => void
     index : number
+    timeout : number
 }
 
 export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.Element{
@@ -51,7 +54,9 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
             setStatus(`row-node-basic row-node`)
         }
         if(!props.isBeginning && !props.isEnd && props.isVisited){
-            setStatus("row-node-basic row-node-is-visited")
+            setTimeout(() => {
+                setStatus("row-node-basic row-node-is-visited")
+            }, props.timeout);
         }
     }
 
