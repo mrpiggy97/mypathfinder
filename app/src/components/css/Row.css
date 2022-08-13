@@ -25,8 +25,6 @@ div.row-node-basic{
     min-width: 25px;
     max-width: 25px;
     border: grey 1px solid;
-}
-
-div.row-node-basic:hover{
-    outline: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
 }

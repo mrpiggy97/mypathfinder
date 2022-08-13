@@ -1,7 +1,6 @@
 import React,{useState,useEffect} from "react";
 import "./css/Row.css"
 
-
 class RowNode{
     previousRowNode : RowNode | null
     nextRowNode : RowNode | null
@@ -65,12 +64,15 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
                 setStatus("row-node-basic row-node-is-visited")
             }, props.timeout);
         }
+        if(props.isBlocked){
+            setStatus("row-node-basic row-node-is-blocked")
+        }
     }
 
     const mouseEntered = () => {
-        if(props.mousePressed && !props.isBeginning && !props.isEnd && props.beginnerNode !== null && props.endNode !== null){
-            setStatus("row-node-basic row-node-is-blocked")
+        if(props.mousePressed === true && (!props.isBeginning && !props.isEnd) && (props.beginnerNode !== null && props.endNode !== null)){
             props.mouseEnter(props.index)
+            setStatus("row-node-basic row-node-is-blocked")
         }
     }
 
@@ -83,11 +85,15 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
         }
     }
 
+    let logIndex = () => {
+        console.log(props.index)
+    }
+
     useEffect(defineStatus,[props.isBeginning,props.isEnd,props.isVisited,props.isBlocked,props.timeout])
 
     return(
-        <div className={status} onClick={defineAction} onMouseDown={props.mouseDown} onMouseEnter={mouseEntered} onMouseUp={props.mouseUp}>
-            <span>{props.index}</span>
+        <div className={status} onClick={defineAction} onMouseEnter={mouseEntered} onMouseUp={props.mouseUp}>
+            <span onClick={logIndex}>{props.index}</span>
         </div>
     )
 }
