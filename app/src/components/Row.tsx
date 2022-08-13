@@ -13,6 +13,7 @@ class RowNode{
     isEnd : boolean
     index : number
     timeout : number
+    blocked : boolean
     constructor(id : number,previousRowNode : RowNode | null, nextRowNode : RowNode | null, row : Row,index : number){
         this.previousRowNode = previousRowNode
         this.nextRowNode = nextRowNode
@@ -24,11 +25,12 @@ class RowNode{
         this.isEnd = false
         this.index = index
         this.timeout = 0
+        this.blocked = false
     }
 }
 
 type RowNodeComponentProps = {
-    beginnerNode : RowNode | null
+    beginnerNode: RowNode | null
     endNode : RowNode | null
     isVisited : boolean
     isBeginning : boolean
@@ -37,6 +39,11 @@ type RowNodeComponentProps = {
     setBeginningNode : (index : number) => void
     index : number
     timeout : number
+    isBlocked : boolean
+    mouseDown : () => void
+    mouseUp : () => void
+    mouseEnter : (rowNodeId : number) => void
+    mousePressed : boolean
 }
 
 export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.Element{
@@ -44,19 +51,26 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
 
     // effects
     const defineStatus = () => {
-        if(props.isBeginning && !props.isEnd){
+        if(props.isBeginning && !props.isEnd && !props.isBlocked){
             setStatus(`row-node-basic row-node-is-beginning`)
         }
-        if(props.isEnd && !props.isBeginning){
+        if(props.isEnd && !props.isBeginning && !props.isBlocked){
             setStatus(`row-node-basic row-node-is-end`)
         }
-        if(!props.isBeginning && !props.isEnd){
+        if(!props.isBeginning && !props.isEnd && !props.isBlocked){
             setStatus(`row-node-basic row-node`)
         }
-        if(!props.isBeginning && !props.isEnd && props.isVisited){
+        if(!props.isBeginning && !props.isEnd && props.isVisited && !props.isBlocked){
             setTimeout(() => {
                 setStatus("row-node-basic row-node-is-visited")
             }, props.timeout);
+        }
+    }
+
+    const mouseEntered = () => {
+        if(props.mousePressed && !props.isBeginning && !props.isEnd && props.beginnerNode !== null && props.endNode !== null){
+            setStatus("row-node-basic row-node-is-blocked")
+            props.mouseEnter(props.index)
         }
     }
 
@@ -69,15 +83,11 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
         }
     }
 
-    useEffect(defineStatus,[props.isBeginning,props.isEnd,props.isVisited])
-
-    const logIsVisited = () => {
-        console.log(props.isVisited)
-    }
+    useEffect(defineStatus,[props.isBeginning,props.isEnd,props.isVisited,props.isBlocked,props.timeout])
 
     return(
-        <div className={status} onClick={defineAction}>
-            <span onClick={logIsVisited}>{props.index}</span>
+        <div className={status} onClick={defineAction} onMouseDown={props.mouseDown} onMouseEnter={mouseEntered} onMouseUp={props.mouseUp}>
+            <span>{props.index}</span>
         </div>
     )
 }
@@ -103,6 +113,7 @@ function getNodesForRow(numberOfNodes : number, row : Row,currentRowNodeId : num
     return nodesForRow
 }
 
+// every row will have the same amount of members in Nodes
 class Row{
     Id : number
     PreviousRow : Row | null

@@ -49,6 +49,8 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
     },[props.CanvasSize])
 
     let [rowNodes,setRowNodes] = useState(nodes)
+    let [mouseIsPressed, setMouseIsPressed] = useState(false)
+    let [nodesToBlock,setNodesToBlock] = useState<number[]>([])
 
     let [selectedBeginnerNode,setSelectedBeginnerNode] = useState<RowNode|null>(null)
     let [selectedEndNode,setSelectedEndNode] = useState<RowNode|null>(null)
@@ -94,6 +96,27 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
         setSelectedEndNode(null)
     }
 
+    const handleMouseDown = () => {
+        setMouseIsPressed(true)
+    }
+
+    const handleMouseUp = () => {
+        setMouseIsPressed(false)
+        let clone : RowNode[] = structuredClone(rowNodes)
+        for(let i = 0; i < nodesToBlock.length; i++){
+            clone[nodesToBlock[i]].blocked = true
+        }
+        setRowNodes(clone)
+    }
+    const handleMouseEnter = (rowNodeId : number) => {
+        let rowNodesClone : RowNode[] = structuredClone(rowNodes)
+        let nodesToBlockClone : number[] = structuredClone(nodesToBlock)
+        if(!rowNodesClone[rowNodeId].blocked && !rowNodesClone[rowNodeId].isBeginning && !rowNodesClone[rowNodeId].isEnd){
+            nodesToBlockClone.push(rowNodeId)
+            setNodesToBlock(nodesToBlockClone)
+        }
+    }
+
     return(
         <div id="canvas">
             <div id="menu">
@@ -113,6 +136,11 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
                     setEndNode={setEndNode}
                     index={node.id}
                     timeout={node.timeout}
+                    isBlocked={node.blocked}
+                    mouseDown={handleMouseDown}
+                    mouseUp={handleMouseUp}
+                    mouseEnter={handleMouseEnter}
+                    mousePressed={mouseIsPressed}
                     />
                 })}
             </div>

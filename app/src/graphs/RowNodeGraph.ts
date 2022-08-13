@@ -51,7 +51,7 @@ export default class RowNodeGraph{
             if(currentNode.id === endNode.id){
                 break
             }
-            if(!this.nodes[currentNode.id]){
+            if(!this.nodes[currentNode.id] && !currentNode.blocked){
                 this.addNode(currentNode)
                 this.addEdge(currentNode)
                 visitedNodes.push(currentNode.id)
@@ -64,7 +64,7 @@ export default class RowNodeGraph{
                 for(let y = 0; y < newNodesToVisit.length; y++){
                     let relatedNode : RowNode | null = newNodesToVisit[y]
                     if(relatedNode){
-                        if(!nodesToVisit.includes(relatedNode)){
+                        if(!nodesToVisit.includes(relatedNode) && !relatedNode.blocked){
                             nodesToVisit.push(relatedNode)
                         }
                     }

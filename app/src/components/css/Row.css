@@ -14,6 +14,10 @@ div.row-node-is-visited{
     background-color: grey;
 }
 
+div.row-node-is-blocked{
+    background-color: black;
+}
+
 div.row-node-basic{
     display: grid;
     min-height: 25px;
@@ -21,4 +25,8 @@ div.row-node-basic{
     min-width: 25px;
     max-width: 25px;
     border: grey 1px solid;
+}
+
+div.row-node-basic:hover{
+    outline: none;
 }
