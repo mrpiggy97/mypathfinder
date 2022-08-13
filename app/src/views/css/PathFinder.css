@@ -17,10 +17,12 @@ div#menu{
 div#path-finder{
     display: grid;
     grid-area: "path-finder";
-    row-gap: 1px;
-    grid-template-columns: repeat(30,1fr);
-    grid-template-rows: repeat(30,1fr);
+    row-gap: none;
+    grid-template-columns: repeat(45,1fr);
+    column-gap: none;
+    grid-template-rows: repeat(45,1fr);
     grid-auto-rows: min-content;
+    align-items: center;
     justify-items: center;
     border: black solid 5px;
 }

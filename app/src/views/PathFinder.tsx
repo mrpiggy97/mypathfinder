@@ -2,6 +2,7 @@ import React,{useMemo, useState} from "react";
 import {Row,RowNode} from "../components/Row";
 import RowNodeComponent from "../components/Row"
 import RowNodeGraph from "../graphs/RowNodeGraph";
+import { NUMBER_OF_ITEMS_PER_ROW } from "../App";
 
 import "./css/PathFinder.css"
 
@@ -23,7 +24,7 @@ function getNodesFromRows(canvasSize : number) : RowNode[]{
             let newRow = new Row(i,null,null,numberOfMembersPerRow,currentRowNodeId)
             currentRow = newRow
             rowNodes.push(...newRow.Nodes)
-            currentRowNodeId = currentRowNodeId + 30
+            currentRowNodeId = currentRowNodeId + NUMBER_OF_ITEMS_PER_ROW
         }else{
             // every Row after the beginning row will have previousRow
             // the currentRow value(which will be updated with every new Row)
@@ -32,7 +33,7 @@ function getNodesFromRows(canvasSize : number) : RowNode[]{
             currentRow.NextRow = newRow
             currentRow = newRow
             rowNodes.push(...newRow.Nodes)
-            currentRowNodeId = currentRowNodeId + 30
+            currentRowNodeId = currentRowNodeId + NUMBER_OF_ITEMS_PER_ROW
         }
     }
 
@@ -94,6 +95,7 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
         setRowNodes(getNodesFromRows(props.CanvasSize))
         setSelectedBeginnerNode(null)
         setSelectedEndNode(null)
+        setNodesToBlock([])
     }
 
     const handleMouseDown = () => {
@@ -123,7 +125,7 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
                 <span onClick={startPathFinder}>start pathfinder</span>
                 <span onClick={setDefaultNodes}>set empty nodes</span>
             </div>
-            <div id="path-finder">
+            <div id="path-finder" onMouseDown={handleMouseDown}>
                 {rowNodes.map((node) => {
                     return <RowNodeComponent
                     isVisited={node.isVisited}
