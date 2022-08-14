@@ -104,11 +104,6 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
 
     const handleMouseUp = () => {
         setMouseIsPressed(false)
-        let clone : RowNode[] = structuredClone(rowNodes)
-        for(let i = 0; i < nodesToBlock.length; i++){
-            clone[nodesToBlock[i]].blocked = true
-        }
-        setRowNodes(clone)
     }
     const handleMouseEnter = (rowNodeId : number) => {
         let rowNodesClone : RowNode[] = structuredClone(rowNodes)
@@ -117,6 +112,11 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
             nodesToBlockClone.push(rowNodeId)
             setNodesToBlock(nodesToBlockClone)
         }
+        for(let i = 0; i < nodesToBlock.length; i++){
+            let nodeId : number = nodesToBlock[i]
+            rowNodesClone[nodeId].blocked = true
+        }
+        setRowNodes(rowNodesClone)
     }
 
     return(
