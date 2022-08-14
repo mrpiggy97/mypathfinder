@@ -72,7 +72,6 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
     const mouseEntered = () => {
         if(props.mousePressed === true && (!props.isBeginning && !props.isEnd) && (props.beginnerNode !== null && props.endNode !== null)){
             props.mouseEnter(props.index)
-            setStatus("row-node-basic row-node-is-blocked")
         }
     }
 
