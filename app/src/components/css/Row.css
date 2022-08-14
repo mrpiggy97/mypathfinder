@@ -3,7 +3,7 @@ div.row-node{
 }
 
 div.row-node-is-beginning{
-    background-color: blue;
+    background-color: green;
 }
 
 div.row-node-is-end{
@@ -11,7 +11,7 @@ div.row-node-is-end{
 }
 
 div.row-node-is-visited{
-    background-color: grey;
+    background-color: darkblue;
 }
 
 div.row-node-is-blocked{
