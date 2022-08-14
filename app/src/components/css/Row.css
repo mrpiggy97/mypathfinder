@@ -11,11 +11,15 @@ div.row-node-is-end{
 }
 
 div.row-node-is-visited{
-    background-color: darkblue;
+    animation: row-node-is-visited;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+    background-color: aqua;
 }
 
 div.row-node-is-blocked{
-    background-color: black;
+    background-color: teal;
 }
 
 div.row-node-basic{
@@ -27,4 +31,26 @@ div.row-node-basic{
     border: grey 1px solid;
     -moz-user-select: none;
     -webkit-user-select: none;
+}
+
+@keyframes row-node-is-visited {
+    25% {
+        transform: scale(0.3);
+        background-color: navy;
+    };
+
+    50%{
+        transform: scale(0.4);
+        background-color: yellow;
+    };
+
+    75%{
+        transform: scale(0.8);
+        background-color: yellow;
+    };
+
+    100%{
+        transform: scale(1);
+        background-color: aqua;
+    };
 }
