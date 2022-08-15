@@ -36,7 +36,7 @@ div.row-node-basic{
 @keyframes row-node-is-visited {
     25% {
         transform: scale(0.3);
-        background-color: navy;
+        background-color: yellow;
     };
 
     50%{
