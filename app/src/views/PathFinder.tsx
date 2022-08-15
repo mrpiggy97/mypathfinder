@@ -139,7 +139,6 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
                     index={node.id}
                     timeout={node.timeout}
                     isBlocked={node.blocked}
-                    mouseDown={handleMouseDown}
                     mouseUp={handleMouseUp}
                     mouseEnter={handleMouseEnter}
                     mousePressed={mouseIsPressed}
