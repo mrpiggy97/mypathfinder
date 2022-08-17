@@ -29,6 +29,7 @@ div.row-node-basic{
     min-width: 25px;
     max-width: 25px;
     border: grey 1px solid;
+    user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
 }
@@ -66,12 +67,12 @@ div.row-node-clean-node{
 @keyframes row-node-clean-node-animation {
     25% {
         transform: scale(0.3);
-        background-color: beige;
+        background-color: transparent;
     }
 
     50%{
         transform: scale(0.6);
-        background-color: bisque;
+        background-color: transparent;
     }
 
     75%{

@@ -56,6 +56,9 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
     let [selectedBeginnerNode,setSelectedBeginnerNode] = useState<RowNode|null>(null)
     let [selectedEndNode,setSelectedEndNode] = useState<RowNode|null>(null)
     let [dijkstraStarted, setDijkstraStarted] = useState(false)
+    // nodesToClean refers to all nodes with isVisited as true, all nodes
+    // with isBlocked as true and beginner and end nodes
+    let [nodesToClean, setNodesToClean] = useState<number[]>([])
 
     const startPathFinder = () => {
         if(selectedBeginnerNode && selectedEndNode){
@@ -66,6 +69,9 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
             let newGraph : RowNodeGraph = new RowNodeGraph()
             let dijstraResult = newGraph.Dijkstra(rowNodes,selectedBeginnerNode.id,selectedEndNode.id)
             setRowNodes(dijstraResult.newNodes)
+            // blockedNodesClone refers to all nodes that will become walls in the canvas
+            let blockedNodesClone = structuredClone(nodesToBlock)
+            setNodesToClean([...dijstraResult.nodesChanged,...blockedNodesClone,selectedBeginnerNode.id,selectedEndNode.id])
             setTimeout(() => {
                 setDijkstraStarted(false)
             },dijstraResult.totalTimeout)
@@ -101,10 +107,17 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
     }
 
     const setDefaultNodes = () => {
-        setRowNodes(getNodesFromRows(props.CanvasSize))
+        let newNodes : RowNode[] = getNodesFromRows(props.CanvasSize)
+        nodesToClean.map((node) => {
+            newNodes[node].cleanNode = true
+        })
+        setRowNodes(newNodes)
         setSelectedBeginnerNode(null)
         setSelectedEndNode(null)
         setNodesToBlock([])
+        setTimeout(() => {
+            setRowNodes(getNodesFromRows(props.CanvasSize))
+        },3000)
     }
 
     const handleMouseDown = () => {
@@ -119,10 +132,17 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
     const handleMouseEnter = (rowNodeId : number) => {
         let rowNodesClone : RowNode[] = structuredClone(rowNodes)
         let nodesToBlockClone : number[] = structuredClone(nodesToBlock)
+        // get node with rowNodeId
+        // check the rowNode is not already blocked or set and beginnerNode or endNode
+        // and if the above conditions are true then push rowNodeId to clone of nodesToBlock
+        // and then set that clone as the new nodesToBlock state
         if(!rowNodesClone[rowNodeId].blocked && !rowNodesClone[rowNodeId].isBeginning && !rowNodesClone[rowNodeId].isEnd){
             nodesToBlockClone.push(rowNodeId)
             setNodesToBlock(nodesToBlockClone)
         }
+        // loop though every nodeId in nodesToBlock
+        // set property blocked of respective rowNodesClone member to true
+        // set rowNodesClone as the new rowNodes state
         for(let i = 0; i < nodesToBlock.length; i++){
             let nodeId : number = nodesToBlock[i]
             rowNodesClone[nodeId].blocked = true
@@ -155,6 +175,7 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
                     mouseUp={handleMouseUp}
                     mouseEnter={handleMouseEnter}
                     mousePressed={mouseIsPressed}
+                    cleanNode={node.cleanNode}
                     />
                 })}
             </div>

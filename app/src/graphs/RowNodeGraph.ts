@@ -7,6 +7,7 @@ type NodeGraph = {
 type DijstraReturn = {
     newNodes : RowNode[]
     totalTimeout : number
+    nodesChanged : number[]
 }
 
 export default class RowNodeGraph{
@@ -49,6 +50,7 @@ export default class RowNodeGraph{
         let beginningNode : RowNode = clone[beginnerNodeId]
         let endNode : RowNode = clone[endNodeId]
         let nodesToVisit : RowNode[] = [beginningNode]
+        let nodesVisited : number[] = []
         let startingTimeout : number = 10
         let DijstraTotalTimeout : number = 10
         for(let i=0; i < nodesToVisit.length; i++){
@@ -64,6 +66,7 @@ export default class RowNodeGraph{
                     clone[currentNode.id].timeout = startingTimeout
                     startingTimeout = startingTimeout + 50
                     DijstraTotalTimeout = DijstraTotalTimeout + 50
+                    nodesVisited.push(currentNode.id)
                 }
                 let newNodesToVisit : (RowNode|null)[] = this.nodes[currentNode.id]
                 for(let y = 0; y < newNodesToVisit.length; y++){
@@ -78,7 +81,8 @@ export default class RowNodeGraph{
         }
         let dijstra : DijstraReturn = {
             newNodes : clone,
-            totalTimeout : DijstraTotalTimeout
+            totalTimeout : DijstraTotalTimeout,
+            nodesChanged : nodesVisited
         }
         return dijstra
     }

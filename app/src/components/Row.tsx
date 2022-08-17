@@ -13,6 +13,7 @@ class RowNode{
     index : number
     timeout : number
     blocked : boolean
+    cleanNode : boolean
     constructor(id : number,previousRowNode : RowNode | null, nextRowNode : RowNode | null, row : Row,index : number){
         this.previousRowNode = previousRowNode
         this.nextRowNode = nextRowNode
@@ -25,6 +26,7 @@ class RowNode{
         this.index = index
         this.timeout = 0
         this.blocked = false
+        this.cleanNode = false
     }
 }
 
@@ -42,6 +44,7 @@ type RowNodeComponentProps = {
     mouseUp : () => void
     mouseEnter : (rowNodeId : number) => void
     mousePressed : boolean
+    cleanNode : boolean | null
 }
 
 export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.Element{
@@ -57,6 +60,9 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
         }
         if(!props.isBeginning && !props.isEnd && !props.isBlocked){
             setStatus(`row-node-basic row-node`)
+        }
+        if(props.cleanNode){
+            setStatus("row-node-basic row-node-clean-node")
         }
         if(!props.isBeginning && !props.isEnd && props.isVisited && !props.isBlocked){
             setTimeout(() => {
@@ -83,14 +89,10 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
         }
     }
 
-    useEffect(defineStatus,[props.isBeginning,props.isEnd,props.isVisited,props.isBlocked,props.timeout])
-    let logIsVisited = () => {
-        console.log(props.isVisited,status)
-    }
+    useEffect(defineStatus,[props.isBeginning,props.isEnd,props.isVisited,props.isBlocked,props.timeout,props.cleanNode])
 
     return(
         <div className={status} onClick={defineAction} onMouseEnter={mouseEntered} onMouseUp={props.mouseUp}>
-            <span onClick={logIsVisited}>1</span>
         </div>
     )
 }
