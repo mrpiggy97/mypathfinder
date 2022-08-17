@@ -3,6 +3,5 @@ div#App {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   grid-template-areas: "canvas";
-  border: solid red 5px;
   min-height: 99vh;
 }

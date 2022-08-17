@@ -5,13 +5,31 @@ div#canvas{
     grid-template-areas: "menu"
                          "path-finder"
                          "path-finder";
-    border: green solid 5px;
 }
 
 div#menu{
     display: grid;
     grid-area: "menu";
-    border: purple solid 5px
+    grid-template-rows: 1fr 2fr;
+    grid-template-columns: 1fr;
+    grid-template-areas:    "title"
+                            "tools";
+}
+
+div#title{
+    display: grid;
+    grid-area: title;
+    align-items: center;
+    justify-items: center;
+}
+
+div#tools{
+    display: grid;
+    grid-area: tools;
+    grid-template-columns: repeat(2,1fr);
+    grid-template-rows: 1fr;
+    align-items: center;
+    justify-items: center;
 }
 
 div#path-finder{
@@ -24,5 +42,35 @@ div#path-finder{
     grid-auto-rows: min-content;
     align-items: center;
     justify-items: center;
-    border: black solid 5px;
+    border: yellowgreen solid 5px;
+}
+
+span#start-pathfinder{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: large;
+    color: green;
+    border: green solid 2px;
+    border-radius: 5%;
+}
+
+span#start-pathfinder:hover{
+    cursor: pointer;
+}
+
+span#empty-nodes{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: large;
+    color: red;
+    border: red solid 2px;
+    border-radius: 5%;
+}
+
+span#empty-nodes:hover{
+    cursor: pointer;
+}
+
+span.dijkstra-title{
+    color: yellowgreen;
+    font-size:xx-large;
+    font-family: 'Courier New', Courier, monospace;
 }
