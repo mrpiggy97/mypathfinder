@@ -117,7 +117,7 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
         setNodesToBlock([])
         setTimeout(() => {
             setRowNodes(getNodesFromRows(props.CanvasSize))
-        },3000)
+        },2000)
     }
 
     const handleMouseDown = () => {
@@ -153,10 +153,15 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
     return(
         <div id="canvas">
             <div id="menu">
-                <span onClick={startPathFinder}>start pathfinder</span>
-                {dijkstraStarted
-                    ? null : <span onClick={setDefaultNodes}>empty nodes</span>
-                }
+                <div id="title">
+                    <span className="dijkstra-title">Dijkstra</span>
+                </div>
+                <div id="tools">
+                    <span onClick={startPathFinder} id="start-pathfinder">start pathfinder</span>
+                    {dijkstraStarted
+                        ? null : <span onClick={setDefaultNodes} id="empty-nodes">empty nodes</span>
+                    }
+                </div>
             </div>
             <div id="path-finder" onMouseDown={handleMouseDown}>
                 {rowNodes.map((node) => {
