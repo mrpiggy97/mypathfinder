@@ -33,6 +33,14 @@ div.row-node-basic{
     -webkit-user-select: none;
 }
 
+div.row-node-clean-node{
+    background-color: transparent;
+    animation: row-node-clean-node-animation;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+}
+
 @keyframes row-node-is-visited {
     25% {
         transform: scale(0.3);
@@ -53,4 +61,26 @@ div.row-node-basic{
         transform: scale(1);
         background-color: aqua;
     };
+}
+
+@keyframes row-node-clean-node-animation {
+    25% {
+        transform: scale(0.3);
+        background-color: beige;
+    }
+
+    50%{
+        transform: scale(0.6);
+        background-color: bisque;
+    }
+
+    75%{
+        transform: scale(0.8);
+        background-color: transparent;
+    }
+
+    100%{
+        transform: scale(1);
+        background-color: transparent;
+    }
 }

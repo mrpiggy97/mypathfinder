@@ -39,7 +39,6 @@ type RowNodeComponentProps = {
     index : number
     timeout : number
     isBlocked : boolean
-    mouseDown : () => void
     mouseUp : () => void
     mouseEnter : (rowNodeId : number) => void
     mousePressed : boolean
@@ -84,15 +83,14 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
         }
     }
 
-    let logIndex = () => {
-        console.log(props.index)
-    }
-
     useEffect(defineStatus,[props.isBeginning,props.isEnd,props.isVisited,props.isBlocked,props.timeout])
+    let logIsVisited = () => {
+        console.log(props.isVisited,status)
+    }
 
     return(
         <div className={status} onClick={defineAction} onMouseEnter={mouseEntered} onMouseUp={props.mouseUp}>
-            <span onClick={logIndex}>{props.index}</span>
+            <span onClick={logIsVisited}>1</span>
         </div>
     )
 }

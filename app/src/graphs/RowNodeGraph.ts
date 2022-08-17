@@ -4,6 +4,11 @@ type NodeGraph = {
     [key : number] : (RowNode | null)[]
 }
 
+type DijstraReturn = {
+    newNodes : RowNode[]
+    totalTimeout : number
+}
+
 export default class RowNodeGraph{
     nodes : NodeGraph
     NumberOfNodes : number
@@ -44,8 +49,8 @@ export default class RowNodeGraph{
         let beginningNode : RowNode = clone[beginnerNodeId]
         let endNode : RowNode = clone[endNodeId]
         let nodesToVisit : RowNode[] = [beginningNode]
-        let visitedNodes : number[] = []
         let startingTimeout : number = 10
+        let DijstraTotalTimeout : number = 10
         for(let i=0; i < nodesToVisit.length; i++){
             let currentNode : RowNode = nodesToVisit[i]
             if(currentNode.id === endNode.id){
@@ -54,11 +59,11 @@ export default class RowNodeGraph{
             if(!this.nodes[currentNode.id] && !currentNode.blocked){
                 this.addNode(currentNode)
                 this.addEdge(currentNode)
-                visitedNodes.push(currentNode.id)
                 if(!currentNode.isBeginning){
                     clone[currentNode.id].isVisited = true
                     clone[currentNode.id].timeout = startingTimeout
                     startingTimeout = startingTimeout + 50
+                    DijstraTotalTimeout = DijstraTotalTimeout + 50
                 }
                 let newNodesToVisit : (RowNode|null)[] = this.nodes[currentNode.id]
                 for(let y = 0; y < newNodesToVisit.length; y++){
@@ -71,6 +76,10 @@ export default class RowNodeGraph{
                 }
             }    
         }
-        return clone
+        let dijstra : DijstraReturn = {
+            newNodes : clone,
+            totalTimeout : DijstraTotalTimeout
+        }
+        return dijstra
     }
 }

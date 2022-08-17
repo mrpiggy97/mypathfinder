@@ -55,12 +55,21 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
 
     let [selectedBeginnerNode,setSelectedBeginnerNode] = useState<RowNode|null>(null)
     let [selectedEndNode,setSelectedEndNode] = useState<RowNode|null>(null)
+    let [dijkstraStarted, setDijkstraStarted] = useState(false)
 
     const startPathFinder = () => {
         if(selectedBeginnerNode && selectedEndNode){
+            if(dijkstraStarted){
+                setDijkstraStarted(false)
+            }
+            setDijkstraStarted(true)
             let newGraph : RowNodeGraph = new RowNodeGraph()
-            let newNodes = newGraph.Dijkstra(rowNodes,selectedBeginnerNode.id,selectedEndNode.id)
-            setRowNodes(newNodes)
+            let dijstraResult = newGraph.Dijkstra(rowNodes,selectedBeginnerNode.id,selectedEndNode.id)
+            setRowNodes(dijstraResult.newNodes)
+            setTimeout(() => {
+                setDijkstraStarted(false)
+            },dijstraResult.totalTimeout)
+            
         }else{
             alert("you need to select both beginning and end nodes")
         }
@@ -99,7 +108,9 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
     }
 
     const handleMouseDown = () => {
-        setMouseIsPressed(true)
+        if(!dijkstraStarted){
+            setMouseIsPressed(true)
+        }
     }
 
     const handleMouseUp = () => {
@@ -123,7 +134,9 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
         <div id="canvas">
             <div id="menu">
                 <span onClick={startPathFinder}>start pathfinder</span>
-                <span onClick={setDefaultNodes}>set empty nodes</span>
+                {dijkstraStarted
+                    ? null : <span onClick={setDefaultNodes}>empty nodes</span>
+                }
             </div>
             <div id="path-finder" onMouseDown={handleMouseDown}>
                 {rowNodes.map((node) => {
