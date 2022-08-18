@@ -1,0 +1,7 @@
+version: "3.7"
+
+services:
+  pathfinder:
+    image: "fabianjesusrivas/mypathfinder:v1.0.0"
+    ports:
+      - 3000:3000
