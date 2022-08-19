@@ -48,16 +48,17 @@ export default class RowNodeGraph{
     public Dijkstra(nodes : RowNode[],beginnerNodeId : number,endNodeId : number){
         let clone : RowNode[] = structuredClone(nodes)
         let beginningNode : RowNode = clone[beginnerNodeId]
-        let endNode : RowNode = clone[endNodeId]
         let nodesToVisit : RowNode[] = [beginningNode]
         let nodesVisited : number[] = []
         let startingTimeout : number = 10
         let DijstraTotalTimeout : number = 10
+        let shortestPath : number[] = []
+        let lastNodeFound = false
         for(let i=0; i < nodesToVisit.length; i++){
-            let currentNode : RowNode = nodesToVisit[i]
-            if(currentNode.id === endNode.id){
+            if(lastNodeFound){
                 break
             }
+            let currentNode : RowNode = nodesToVisit[i]
             if(!this.nodes[currentNode.id] && !currentNode.blocked){
                 this.addNode(currentNode)
                 this.addEdge(currentNode)
@@ -72,18 +73,57 @@ export default class RowNodeGraph{
                 for(let y = 0; y < newNodesToVisit.length; y++){
                     let relatedNode : RowNode | null = newNodesToVisit[y]
                     if(relatedNode){
+                        if(relatedNode.isEnd){
+                            shortestPath.push(currentNode.id)
+                            lastNodeFound = true
+                            break
+                        }
                         if(!nodesToVisit.includes(relatedNode) && !relatedNode.blocked){
                             nodesToVisit.push(relatedNode)
                         }
                     }
                 }
-            }    
+            }
         }
+        this.getShortestPath(shortestPath,nodesVisited,beginnerNodeId)
         let dijstra : DijstraReturn = {
             newNodes : clone,
             totalTimeout : DijstraTotalTimeout,
             nodesChanged : nodesVisited
         }
+        console.log(shortestPath)
         return dijstra
+    }
+    // gets nodes related to node with id nodeId
+    // it then appends to an array all the ids
+    // of the related nodes and returns that array
+    public getNodeIds(nodeId : number) : number[]{
+        let nodesRelated : (RowNode|null)[] = this.nodes[nodeId]
+        let ids : number[] = []
+        nodesRelated.map((node) => {
+            if(node){
+                ids.push(node.id)
+            }
+        })
+        return ids
+    }
+
+    public getShortestPath(currentPath : number[], visitedNodes : number[], beginnerNodeId : number){
+        let nodesRelatedToBeginnerNode : number[] = this.getNodeIds(beginnerNodeId)
+        for(let i=0; i < currentPath.length; i++){
+            let mainNodeId : number = currentPath[i]
+            if(nodesRelatedToBeginnerNode.includes(mainNodeId)){
+                break
+            }
+            for(let a = 0; a < visitedNodes.length; a++){
+                let currentNodeId : number = visitedNodes[a]
+                let ids : number[] = this.getNodeIds(currentNodeId)
+                console.log(currentNodeId)
+                if(ids.includes(mainNodeId) && !currentPath.includes(currentNodeId)){
+                    currentPath.push(currentNodeId)
+                    break
+                }
+            }
+        }
     }
 }
