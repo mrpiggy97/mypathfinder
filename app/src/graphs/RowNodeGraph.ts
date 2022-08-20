@@ -45,7 +45,7 @@ export default class RowNodeGraph{
         this.nodes[rowNode.id][3] = rowNode.nextRowNode
     }
 
-    public Dijkstra(nodes : RowNode[],beginnerNodeId : number,endNodeId : number){
+    public Dijkstra(nodes : RowNode[],beginnerNodeId : number){
         let clone : RowNode[] = structuredClone(nodes)
         let beginningNode : RowNode = clone[beginnerNodeId]
         let nodesToVisit : RowNode[] = [beginningNode]
@@ -85,13 +85,12 @@ export default class RowNodeGraph{
                 }
             }
         }
-        this.getShortestPath(shortestPath,nodesVisited,beginnerNodeId)
+        this.getShortestPath(shortestPath,nodesVisited,beginnerNodeId,clone)
         let dijstra : DijstraReturn = {
             newNodes : clone,
             totalTimeout : DijstraTotalTimeout,
             nodesChanged : nodesVisited
         }
-        console.log(shortestPath)
         return dijstra
     }
     // gets nodes related to node with id nodeId
@@ -108,8 +107,23 @@ export default class RowNodeGraph{
         return ids
     }
 
-    public getShortestPath(currentPath : number[], visitedNodes : number[], beginnerNodeId : number){
+    // shortest path will begin with an array containing the last node
+    // before endNode in Dijkstra, this to begin the search for the shortest
+    // path to endNode in Dijkstra method
+    // first get all node ids of nodes directly related to beginnerNode
+    // second set the first element's field isShortestPath in currentPath array to true
+    // third loop through elements in currentPath array, check if current element in
+    // loop is part of the nodes directly related to beginnerNode, if this is the case
+    // then break loop, else
+    // fifth loop through every element in visitedNodes array,
+    // get all node ids of nodes directly related to current node in loop inside an array
+    // and check if any of those node ids are equivalent to the id of the element in the first loop
+    // if so break this second loop 
+    // push the id of this element to currentPath array and let the cycle start over
+    // this until step 3 is achieved
+    public getShortestPath(currentPath : number[], visitedNodes : number[], beginnerNodeId : number,rowNodes : RowNode[]){
         let nodesRelatedToBeginnerNode : number[] = this.getNodeIds(beginnerNodeId)
+        rowNodes[currentPath[0]].isShortestPath = true
         for(let i=0; i < currentPath.length; i++){
             let mainNodeId : number = currentPath[i]
             if(nodesRelatedToBeginnerNode.includes(mainNodeId)){
@@ -118,9 +132,9 @@ export default class RowNodeGraph{
             for(let a = 0; a < visitedNodes.length; a++){
                 let currentNodeId : number = visitedNodes[a]
                 let ids : number[] = this.getNodeIds(currentNodeId)
-                console.log(currentNodeId)
                 if(ids.includes(mainNodeId) && !currentPath.includes(currentNodeId)){
                     currentPath.push(currentNodeId)
+                    rowNodes[currentNodeId].isShortestPath = true
                     break
                 }
             }
