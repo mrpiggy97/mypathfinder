@@ -67,7 +67,7 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
             }
             setDijkstraStarted(true)
             let newGraph : RowNodeGraph = new RowNodeGraph()
-            let dijstraResult = newGraph.Dijkstra(rowNodes,selectedBeginnerNode.id,selectedEndNode.id)
+            let dijstraResult = newGraph.Dijkstra(rowNodes,selectedBeginnerNode.id)
             setRowNodes(dijstraResult.newNodes)
             // blockedNodesClone refers to all nodes that will become walls in the canvas
             let blockedNodesClone = structuredClone(nodesToBlock)
@@ -181,6 +181,7 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
                     mouseEnter={handleMouseEnter}
                     mousePressed={mouseIsPressed}
                     cleanNode={node.cleanNode}
+                    isShortestPath={node.isShortestPath}
                     />
                 })}
             </div>
