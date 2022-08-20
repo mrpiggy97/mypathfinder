@@ -1,4 +1,5 @@
 import React,{useState,useEffect} from "react";
+import { idText } from "typescript";
 import "./css/Row.css"
 
 class RowNode{
@@ -10,6 +11,7 @@ class RowNode{
     isVisited : boolean
     isBeginning : boolean
     isEnd : boolean
+    isShortestPath : boolean
     index : number
     timeout : number
     blocked : boolean
@@ -27,6 +29,7 @@ class RowNode{
         this.timeout = 0
         this.blocked = false
         this.cleanNode = false
+        this.isShortestPath = false
     }
 }
 
@@ -45,6 +48,7 @@ type RowNodeComponentProps = {
     mouseEnter : (rowNodeId : number) => void
     mousePressed : boolean
     cleanNode : boolean | null
+    isShortestPath : boolean
 }
 
 export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.Element{
@@ -71,6 +75,11 @@ export default function RowNodeComponent(props : RowNodeComponentProps) : JSX.El
         }
         if(props.isBlocked){
             setStatus("row-node-basic row-node-is-blocked")
+        }
+        if(props.isVisited && props.isShortestPath){
+            setTimeout(() => {
+                setStatus("row-node-basic row-node-is-shortest-path")
+            },props.timeout)
         }
     }
 
