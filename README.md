@@ -1,7 +1,6 @@
 # mypathfinder
 my version of a path finder that implements Dijkstra's algorithm,
 it has animations and was built with React.js
-here's a gif
 ![](pathfinder.gif)
 
 to run it you will need docker and docker compose installed in your computer,
