@@ -154,7 +154,7 @@ export default function PathFinder(props : PathFinderProps) : JSX.Element{
         <div id="canvas">
             <div id="menu">
                 <div id="title">
-                    <span className="dijkstra-title">Dijkstra</span>
+                    <span className="dijkstra-title">Mypathfinder</span>
                 </div>
                 <div id="tools">
                     <span onClick={startPathFinder} id="start-pathfinder">start pathfinder</span>
